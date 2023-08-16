@@ -6,7 +6,7 @@ from constants import TABLE_SIZE
 
 
 def main():
-    # representing the matrix of the tetrix
+    # representing the board
     board = [[0 for _ in range(0, TABLE_SIZE)] for _ in range(0, TABLE_SIZE)]
     running = True
 
@@ -14,12 +14,11 @@ def main():
     signal.signal(signal.SIGINT, ui.quit_game)
     block = Block(0, 0, 0)
 
-    while running:
-        
-        
+    while running:    
         # user input
-        
-
+    
+    
+        # draw the blcocks on the screen
         if block.y <= TABLE_SIZE:
             # update the position of the block
             board[block.y - 1][block.x - 1] = 1
@@ -32,8 +31,10 @@ def main():
 
         if block.x <= TABLE_SIZE:
             board[block.y - 1][block.x - 1] = 0
+            # block.x += 1
         else:
             block.x = 0
+        
         block.y += 1
 
 if __name__ == "__main__":

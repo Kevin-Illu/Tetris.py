@@ -2,11 +2,12 @@ import os, sys, time
 from constants import TABLE_SIZE
 
 class UI:
-    def __init__(self):
+    def __init__(self, clock_tick):
         self.table_size = TABLE_SIZE
         self.emtpy_cell = "."
         self.filled_cell = "#"
         self.tab = "\n" # tab in each row
+        self.tick = clock_tick
 
     def sprint(self, str):
        for c in str + '\n':
@@ -14,12 +15,12 @@ class UI:
          sys.stdout.flush()
          time.sleep(6./90)
 
-    def print_ui(self, board):
+    def update(self, board):
         board = self.get_board(board)
         self.clear_terminal()     
         sys.stdout.write(board)
         sys.stdout.flush()
-        time.sleep(.5)
+        time.sleep(self.tick)
     
     def get_board(self, board):
         p_table = ""

@@ -1,4 +1,8 @@
 TABLE_SIZE = 16
+GRID_WIDTH = 4
+GRID_HEIGHT = 4
+TICKS = .4
+
 
 # Shapes of the blocks
 SHAPES = [

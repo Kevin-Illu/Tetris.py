@@ -2,69 +2,77 @@ import signal
 from random import randint
 
 from ui import UI
-from block import Block
-from constants import TABLE_SIZE
+from Shape import Shape
+from constants import TABLE_SIZE, SHAPES, TICKS
+
+
+def get_random_shape():
+    random_index = randint(0, len(SHAPES) - 1)
+    random_shape = SHAPES[3][0]
+    index = randint(0, TABLE_SIZE - 1)
+    shape = Shape(random_shape, index)
+    shape.move(0, 0)
+    return shape
 
 
 def main():
     # representing the board
-    board = [[0 for _ in range(0, TABLE_SIZE)] for _ in range(0, TABLE_SIZE)]
+    board = [[0 for _ in range(TABLE_SIZE)] for _ in range(TABLE_SIZE)]
     running = True
-    ui = UI(clock_tick=.2)
+    ui = UI(clock_tick=TICKS)
 
     # maneja la accion de salir del juego
     signal.signal(signal.SIGINT, ui.quit_game)
 
-    # initial block
-    initial_x_pos = randint(0, len(board[0]) - 1)
-    block = Block(x=initial_x_pos, y=0, t=0)
+    shape = get_random_shape()
+    
+    tomb_of_shapes = []
 
-    # posiciones en las que el bloque
-    # colisiono con la ultima fila u otro bloque
-    filled_cells = []
+    translate_x = 1
+    translate_y = 0
 
     while running:
-        # TODO: Manejar las entradas del jugador (mover, rotar, acelerar)
-
-        # Actualizar el tablero con las celdas ocupadas por bloques completos
-        if len(filled_cells) != 0:
-            for ended_x_pos, ended_y_pos in filled_cells:
-                board[ended_y_pos][ended_x_pos] = 1
-
-        # Crear el siguiente bloque si no hay uno en juego actualmente
-        if block is None:
-            initial_x_pos = randint(0, len(board[0]) - 1)
-            block = Block(x=initial_x_pos, y=0, t=0)
-
-
-        # Actualizar el tablero con la posición actual del bloque
-        if block is not None:
-            board[block.y][block.x] = 1
-            ui.update(board)
-            board[block.y][block.x] = 0
-
         
-        # TODO: Lógica de colisión con otras celdas y finalización del juego
-        # TODO: Actualizar la posición y estado del bloque en función de la lógica del juego
-        # COLISION DE BLOQUES
+        x_is_colliding, y_is_colliding = shape.is_colliding()
+        
+        for x_pos, y_pos in shape.coordinates:
+            
+            if x_is_colliding:
+                translate_x = 0
+                translate_y = 1
+                new_x_pos = x_pos + -1
+            else:
+                new_x_pos = x_pos
+                
+            if y_is_colliding:
+                translate_x = x_pos * -1
+                translate_y = 0
+                new_y_pos = y_pos + -1
+            else:
+                new_y_pos = y_pos
+            
+            board[new_y_pos][new_x_pos] = 1
+            
+        ui.update(board)
+        
+        for x_pos, y_pos in shape.coordinates:
+            if x_is_colliding:
+                new_x_pos = x_pos + -1
+            else:
+                new_x_pos = x_pos
+                
+            if y_is_colliding:
+                new_y_pos = y_pos + -1
+            else:
+                new_y_pos = y_pos
 
-        # verifica si la siguiente posicion del bloque se 
-        # encuentra ocupada
-        if block.y + 1 <= TABLE_SIZE - 1 and board[block.y + 1][block.x] == 1:
-            filled_cells.append((block.x, block.y))
-            block = None
+            
+            board[new_y_pos][new_x_pos] = 0
+        
+        shape.move(translate_x, translate_y)
+            
 
-        # verifica si el bloque actual ya llego a la ultima
-        # fila del tablero
-        elif block is not None and block.y >= TABLE_SIZE - 1:
-            # update the cells occupied by the user
-            filled_cells.append((block.x, block.y))
-            block = None
-        else:
-            # si no es la ultima fila entonces
-            # continua moviendoce c:
-            block.update_y(0)
-
+       
 
 if __name__ == "__main__":
     main()

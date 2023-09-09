@@ -1,78 +1,56 @@
-import signal
-from random import randint
-
-from ui import UI
-from Shape import Shape
-from constants import TABLE_SIZE, SHAPES, TICKS
-
-
-def get_random_shape():
-    random_index = randint(0, len(SHAPES) - 1)
-    random_shape = SHAPES[3][0]
-    index = randint(0, TABLE_SIZE - 1)
-    shape = Shape(random_shape, index)
-    shape.move(0, 0)
-    return shape
-
+from random import randint, choice
+from shapes import SHAPES
 
 def main():
-    # representing the board
-    board = [[0 for _ in range(TABLE_SIZE)] for _ in range(TABLE_SIZE)]
-    running = True
-    ui = UI(clock_tick=TICKS)
-
-    # maneja la accion de salir del juego
-    signal.signal(signal.SIGINT, ui.quit_game)
-
+    rows = 20
+    cols = 10
+    board = [[0 for _ in range(0, cols)] for _ in range(0, rows)]
     shape = get_random_shape()
-    
-    tomb_of_shapes = []
 
-    translate_x = 1
-    translate_y = 0
+    shape_w = len(shape[0])
+    shape_h = len(shape)
 
-    while running:
-        
-        x_is_colliding, y_is_colliding = shape.is_colliding()
-        
-        for x_pos, y_pos in shape.coordinates:
-            
-            if x_is_colliding:
-                translate_x = 0
-                translate_y = 1
-                new_x_pos = x_pos + -1
-            else:
-                new_x_pos = x_pos
-                
-            if y_is_colliding:
-                translate_x = x_pos * -1
-                translate_y = 0
-                new_y_pos = y_pos + -1
-            else:
-                new_y_pos = y_pos
-            
-            board[new_y_pos][new_x_pos] = 1
-            
-        ui.update(board)
-        
-        for x_pos, y_pos in shape.coordinates:
-            if x_is_colliding:
-                new_x_pos = x_pos + -1
-            else:
-                new_x_pos = x_pos
-                
-            if y_is_colliding:
-                new_y_pos = y_pos + -1
-            else:
-                new_y_pos = y_pos
+    shape_coordinates = get_random_coordinates(cols, shape_w, shape_h)
+    ref = get_coordinate_reference(shape)
 
-            
-            board[new_y_pos][new_x_pos] = 0
-        
-        shape.move(translate_x, translate_y)
-            
+    # merge coordinates and references :D
+    for row, col in ref:
+        y, x = shape_coordinates[row][col]
+        board[y][x] = 1
 
-       
+    for row in board:
+        print(row)
+
+def get_random_shape():
+    return choice(SHAPES)
+
+def get_coordinate_reference(shape):
+    reference = []
+
+    for i, row in enumerate(shape):
+        for e, col in enumerate(row):
+            if col == 1:
+                reference.append((i, e))
+
+    return reference
+
+def get_random_coordinates(board_w, shape_w, shape_h):
+    last_permited_cordinate = board_w - shape_w
+    initial_cordinate = randint(0, last_permited_cordinate)
+
+    coordinates = []
+    counter = 0
+
+    for row in range(0, shape_h):
+        cols = []
+        for _ in range(0, shape_w):
+            cols.append((row, initial_cordinate + counter))
+            counter += 1
+
+        counter = 0
+        coordinates.append(cols)
+
+    return coordinates
 
 if __name__ == "__main__":
     main()

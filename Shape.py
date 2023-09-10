@@ -69,6 +69,8 @@ class Shape:
 
         return coordinates
     
+
+    # TODO: use the new coordinates
     def get_true_coordinates(self, old_coordinates, new_coordinates):
         old_y, old_x = old_coordinates
         new_y, new_x = new_coordinates
@@ -110,9 +112,6 @@ class Shape:
                 return True
 
         return False
-
-    # def is_colliding(self):
-        
 
     def commit_next_move(self, next_coordinates):
         self.coordinates = next_coordinates

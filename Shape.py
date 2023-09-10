@@ -68,12 +68,30 @@ class Shape:
             coordinates.append((y, x))
 
         return coordinates
+    
+    def get_true_coordinates(self, old_coordinates, new_coordinates):
+        old_y, old_x = old_coordinates
+        new_y, new_x = new_coordinates
+
+        true_x = 0
+        true_y = old_y + 1
+
+        if new_x < 0:
+            true_x = old_x - 1
+        else:
+            true_x = old_x + new_x
+
+        return (true_y, true_x)
 
     def get_next_coordinates(self, y, x):
         next_coordinates = []
-
+        
         for row in self.coordinates:
-            next_coordinates.append([(old_y + y, old_x + x) for old_y, old_x in row])
+            coordinates_for_row = []
+            for old_coordinates in row:
+                true_y, true_x = self.get_true_coordinates(old_coordinates, (y, x))
+                coordinates_for_row.append((true_y, true_x))
+            next_coordinates.append(coordinates_for_row)
 
         return next_coordinates
 
@@ -91,7 +109,25 @@ class Shape:
             if board.grid[y][x] != 0:
                 return True
 
-
         return False
+
+    # def is_colliding(self):
+        
+
+    def commit_next_move(self, next_coordinates):
+        self.coordinates = next_coordinates
+        self.normalized_coordinates = self.normalize_coordinates(next_coordinates)
+
+    def move_left(self):
+        next_coordinates = self.get_next_coordinates(0, -1)
+        self.commit_next_move(next_coordinates)
+
+    def move_bottom(self):
+        next_coordinates = self.get_next_coordinates(1, 0)
+        self.commit_next_move(next_coordinates)
+
+    def move_right(self):
+        next_coordinates = self.get_next_coordinates(0, 1)
+        self.commit_next_move(next_coordinates)
 
 

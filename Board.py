@@ -28,6 +28,12 @@ class Board:
             str_board += "\n"
 
         print(str_board)
+        
+        # clean the grid
+        for row, col in shape.normalized_coordinates:
+            self.grid[row][col] = 0
+
+
 
 
 

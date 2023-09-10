@@ -76,12 +76,17 @@ class Shape:
         new_y, new_x = new_coordinates
 
         true_x = 0
-        true_y = old_y + 1
+        true_y = 0
 
         if new_x < 0:
             true_x = old_x - 1
         else:
             true_x = old_x + new_x
+
+        if new_y > 0:
+            true_y = 1
+        else:
+            true_y = new_y
 
         return (true_y, true_x)
 

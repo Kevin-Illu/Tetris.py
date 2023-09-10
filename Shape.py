@@ -6,8 +6,11 @@ class Shape:
         self.blocks = b
         self.width = len(self.blocks[0])
         self.height = len(self.blocks)
-        self.coordinates = self.get_random_coordinates()
+        
+        # coordinates system
         self.ref = self.get_reference()
+        self.coordinates = self.get_random_coordinates()
+        self.normalized_coordinates = self.normalize_coordinates(self.coordinates)
     
     def get_random_coordinates(self):
         """
@@ -51,7 +54,7 @@ class Shape:
         reference = [(i, j) for i in range(self.height) for j in range(self.width) if self.blocks[i][j] == 1]
         return reference
 
-    def get_coordinates(self):
+    def normalize_coordinates(self, next_coordinates):
         """
         Obtain the actual (row, column) coordinates of the shape on the board.
 
@@ -61,7 +64,34 @@ class Shape:
         """
         coordinates = []
         for row, col in self.ref:
-            y, x = self.coordinates[row][col]
+            y, x = next_coordinates[row][col]
             coordinates.append((y, x))
 
         return coordinates
+
+    def get_next_coordinates(self, y, x):
+        next_coordinates = []
+
+        for row in self.coordinates:
+            next_coordinates.append([(old_y + y, old_x + x) for old_y, old_x in row])
+
+        return next_coordinates
+
+    def check_if_next_move_is_colliding(self, y, x, board):
+        next_coordinates = self.get_next_coordinates(y=y, x=x)
+        normalized_coordinates = self.normalize_coordinates(next_coordinates)
+
+        for y, x in normalized_coordinates:
+            if x > board.width - 1 or x < 0:
+                return True
+            elif y > board.height - 1:
+                return True
+
+        for y, x in normalized_coordinates:
+            if board.grid[y][x] != 0:
+                return True
+
+
+        return False
+
+

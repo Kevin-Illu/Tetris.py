@@ -22,25 +22,14 @@ def main():
     shape = Shape(SHAPES[0])
     shape.coordinates = [[(0, 0), (0, 1), (0, 2)], [(1, 0), (1, 1), (1, 2)]]
     shape.normalized_coordinates = [(0, 0), (0, 1), (0, 2), (1, 2)]
-    key_handler = KeyboardHandler()
-
     # keyboard logic
-    key_handler.register_key_action("esc", exit_program)
-
-    key_handler.register_key_action("h", shape.move_left)
-    key_handler.register_key_action("l", shape.move_right)
-    key_handler.register_key_action("j", shape.move_bottom)
-
     moves = {
         "right": (0, 1),
         "left": (0, -1),
         "bottom": (1, 0)
     }
-
     y, x = moves["bottom"]
 
-
-    key_handler.start_listening()
 
     while (not is_game_over):
         is_colliding_bottom = shape.check_if_next_move_is_colliding(y, x, board)
@@ -49,7 +38,6 @@ def main():
         board.print_board(shape)
 
         if is_colliding_bottom or is_colliding_right:
-            key_handler.stop_listening()
             is_game_over = True
             print("game mover")
 

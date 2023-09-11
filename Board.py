@@ -1,3 +1,7 @@
+import os
+import sys
+import time
+
 class Board:
     def __init__(self, w, h) -> None:
         self.width = w
@@ -27,7 +31,10 @@ class Board:
                     str_board += " . "
             str_board += "\n"
 
-        print(str_board)
+        os.system("cls")
+        sys.stdout.write(str_board)
+        sys.stdout.flush()
+        time.sleep(.5)
         
         # clean the grid
         for row, col in shape.normalized_coordinates:

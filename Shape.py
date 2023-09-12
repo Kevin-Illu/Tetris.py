@@ -77,16 +77,16 @@ class Shape:
 
         true_x = 0
         true_y = 0
-
+        
         if new_x < 0:
             true_x = old_x - 1
         else:
             true_x = old_x + new_x
 
-        if new_y > 0:
-            true_y = 1
+        if new_y < 0:
+            true_y = old_y - 1
         else:
-            true_y = new_y
+            true_y = old_y + new_y
 
         return (true_y, true_x)
 
@@ -126,12 +126,13 @@ class Shape:
         next_coordinates = self.get_next_coordinates(0, -1)
         self.commit_next_move(next_coordinates)
 
+    def move_right(self):
+        next_coordinates = self.get_next_coordinates(0, 1)
+        self.commit_next_move(next_coordinates)
+
     def move_bottom(self):
         next_coordinates = self.get_next_coordinates(1, 0)
         self.commit_next_move(next_coordinates)
 
-    def move_right(self):
-        next_coordinates = self.get_next_coordinates(0, 1)
-        self.commit_next_move(next_coordinates)
 
 

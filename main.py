@@ -25,7 +25,7 @@ def main():
         "left": (0, -1),
         "bottom": (1, 0)
     }
-    y, x = moves["bottom"]
+    y, x = moves["right"]
 
     while (not is_game_over):
         
@@ -34,7 +34,7 @@ def main():
 
         # test the bottom collisions
         if not is_colliding:
-            shape.move_bottom()
+            shape.move_right()
         else:
             break
 

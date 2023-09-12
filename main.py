@@ -18,26 +18,27 @@ def main():
     is_game_over = False
 
     board = Board(w=COLS, h=ROWS)
-    shape = Shape(get_random_shape())
+    shape = Shape(SHAPES[5])
+
+    shape.coordinates = [[(10, 3), (10, 4), (10, 5)], [(11, 3), (11, 4), (11, 5)]]
+    shape.normalized_coordinates = shape.normalize_coordinates(shape.coordinates)
+
     # keyboard logic
-    moves = {
-        "right": (0, 1),
-        "left": (0, -1),
-        "bottom": (1, 0)
-    }
-    y, x = moves["right"]
-
+    # moves = {
+    #     "right": (0, 1),
+    #     "left": (0, -1),
+    #     "bottom": (1, 0)
+    # }
+    
+    count = 0
     while (not is_game_over):
-        
-        is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
-        board.print_board(shape)
 
-        # test the bottom collisions
-        if not is_colliding:
-            shape.move_right()
-        else:
+        if count > 4:
             break
 
+        shape.rotate()
+        board.print_board(shape)
+        count += 1
 
 
 

@@ -1,4 +1,6 @@
+from collections import deque
 from random import randint
+
 board_w = 10
 
 class Shape:
@@ -134,5 +136,9 @@ class Shape:
         next_coordinates = self.get_next_coordinates(1, 0)
         self.commit_next_move(next_coordinates)
 
-
+    def rotate(self):
+        new_ref = deque(self.ref)
+        new_ref.rotate(1)
+        self.ref = list(new_ref)
+        self.commit_next_move(self.coordinates)
 

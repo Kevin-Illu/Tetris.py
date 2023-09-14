@@ -6,13 +6,13 @@ board_w = 10
 class Shape:
     def __init__(self, b) -> None:
         self.blocks = b
-        self.width = len(self.blocks[0])
-        self.height = len(self.blocks)
-        
         # coordinates system
         self.ref = self.get_reference()
         self.coordinates = self.get_random_coordinates()
         self.normalized_coordinates = self.normalize_coordinates(self.coordinates)
+
+    def get_rows_and_cols(self):
+        return (len(self.blocks), len(self.blocks[0]))
     
     def get_random_coordinates(self):
         """
@@ -23,22 +23,37 @@ class Shape:
             list of tuples: A list of (row, column) coordinates representing
             the initial position of the shape on the board.
         """
-        last_permitted_coordinate = board_w - self.width
+        rows, cols = self.get_rows_and_cols()
+
+        last_permitted_coordinate = board_w - cols
         initial_cordinate = randint(0, last_permitted_coordinate)
 
         coordinates = []
         counter = 0
 
-        for row in range(0, self.height):
-            cols = []
-            for _ in range(0, self.width):
-                cols.append((row, initial_cordinate + counter))
+        for row in range(rows):
+            new_cols = []
+            for _ in range(cols):
+                new_cols.append((row, initial_cordinate + counter))
                 counter += 1
 
             counter = 0
-            coordinates.append(cols)
+            coordinates.append(new_cols)
 
         return coordinates
+
+    def get_coordinates(self, y, x):
+        next_coordinates = []
+        
+        for row in self.coordinates:
+            coordinates_for_row = []
+            for old_coordinates in row:
+                true_y, true_x = self.get_true_coordinates(old_coordinates, (y, x))
+                coordinates_for_row.append((true_y, true_x))
+            next_coordinates.append(coordinates_for_row)
+
+        return next_coordinates
+
 
     def get_reference(self):
         """
@@ -53,7 +68,15 @@ class Shape:
             list of tuples: A list of (row, column) coordinates representing
             the occupied positions within the shape.
         """
-        reference = [(i, j) for i in range(self.height) for j in range(self.width) if self.blocks[i][j] == 1]
+
+        rows, cols = self.get_rows_and_cols()
+
+        reference = []
+        for j in range(rows):
+            for i in range(cols):
+                if self.blocks[j][i] == 1:
+                    reference.append((j, i))
+            
         return reference
 
     def normalize_coordinates(self, next_coordinates):
@@ -135,10 +158,25 @@ class Shape:
     def move_bottom(self):
         next_coordinates = self.get_next_coordinates(1, 0)
         self.commit_next_move(next_coordinates)
-
+    
+    def commit_rotated_shape(self):
+        self.blocks = self.rotate()
+        self.ref = self.get_reference()
+        next_coordinates = self.get_next_coordinates(0, 0)
+        self.commit_next_move(next_coordinates)
+    
     def rotate(self):
-        new_ref = deque(self.ref)
-        new_ref.rotate(1)
-        self.ref = list(new_ref)
-        self.commit_next_move(self.coordinates)
+        # Obtenemos las dimensiones de la figura
+        rows, cols = self.get_rows_and_cols()
+
+        # Creamos una nueva matriz vacía para la figura rotada
+        rotated_shape = [[0] * rows for _ in range(cols)]
+
+        # Rotamos la figura
+        for i in range(rows):
+            for j in range(cols):
+                rotated_shape[j][rows - 1 - i] = self.blocks[i][j]
+    
+        return rotated_shape
+
 

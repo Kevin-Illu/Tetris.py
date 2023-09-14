@@ -18,7 +18,8 @@ def main():
     is_game_over = False
 
     board = Board(w=COLS, h=ROWS)
-    shape = Shape(SHAPES[5])
+    # shape = Shape(SHAPES[5])
+    shape = Shape(get_random_shape())
 
     shape.coordinates = [[(10, 3), (10, 4), (10, 5)], [(11, 3), (11, 4), (11, 5)]]
     shape.normalized_coordinates = shape.normalize_coordinates(shape.coordinates)
@@ -33,11 +34,12 @@ def main():
     count = 0
     while (not is_game_over):
 
-        if count > 4:
+        if count >= 4:
             break
 
-        shape.rotate()
         board.print_board(shape)
+        shape.commit_rotated_shape()
+
         count += 1
 
 

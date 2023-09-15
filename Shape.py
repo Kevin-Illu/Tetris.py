@@ -56,7 +56,7 @@ class Shape:
         return rotated_shape
 
     def get_new_coordinates(self):
-        _, initial_x = self.coordinates[0][0]
+        initial_y, initial_x = self.coordinates[0][0]
         rotated_shape = self.get_rotated_shape()
         
         # puede haber conflictos :c
@@ -65,14 +65,17 @@ class Shape:
 
         new_coordinates = []
         counter = 0
-        for row in range(rows):
+        row_conter = 0
+        for _ in range(rows):
             coordinates_for_row = []
             for _ in range(cols):
-                coordinates_for_row.append((row, initial_x + counter))
+                coordinates_for_row.append((initial_y + row_conter, initial_x + counter))
                 counter += 1
 
+            row_conter += 1
             counter = 0
             new_coordinates.append(coordinates_for_row)
+
         return new_coordinates
 
     def get_rotated_shape_and_coordinates(self):

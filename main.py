@@ -48,8 +48,10 @@ def main():
         if not is_colliding:
             shape.move_bottom()
         else:
+            # TODO:
+            # put the current shape 
+            # in the tomb and create other
             pass
-            # put in the tomb
             
 
         try:

@@ -1,8 +1,8 @@
 from random import choice
 import keyboard
 
-from board import Board
-from shape import Shape
+from Board import Board
+from Shape import Shape
 from tetris_shapes import SHAPES
 
 def get_random_shape():

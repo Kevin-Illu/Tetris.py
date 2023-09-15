@@ -1,4 +1,3 @@
-from collections import deque
 from random import randint
 
 board_w = 10
@@ -41,20 +40,44 @@ class Shape:
             coordinates.append(new_cols)
 
         return coordinates
+    
+    def get_rotated_shape(self):
+        # Obtenemos las dimensiones de la figura
+        rows, cols = self.get_rows_and_cols()
 
-    def get_coordinates(self, y, x):
-        next_coordinates = []
+        # Creamos una nueva matriz vacía para la figura rotada
+        rotated_shape = [[0] * rows for _ in range(cols)]
+
+        # Rotamos la figura
+        for i in range(rows):
+            for j in range(cols):
+                rotated_shape[j][rows - 1 - i] = self.blocks[i][j]
+    
+        return rotated_shape
+
+    def get_new_coordinates(self):
+        _, initial_x = self.coordinates[0][0]
+        rotated_shape = self.get_rotated_shape()
         
-        for row in self.coordinates:
+        # puede haber conflictos :c
+        self.blocks = rotated_shape
+        rows, cols = self.get_rows_and_cols()
+
+        new_coordinates = []
+        counter = 0
+        for row in range(rows):
             coordinates_for_row = []
-            for old_coordinates in row:
-                true_y, true_x = self.get_true_coordinates(old_coordinates, (y, x))
-                coordinates_for_row.append((true_y, true_x))
-            next_coordinates.append(coordinates_for_row)
+            for _ in range(cols):
+                coordinates_for_row.append((row, initial_x + counter))
+                counter += 1
 
-        return next_coordinates
+            counter = 0
+            new_coordinates.append(coordinates_for_row)
+        return new_coordinates
 
-
+    def get_rotated_shape_and_coordinates(self):
+        return self.get_rotated_shape(), self.get_new_coordinates()
+        
     def get_reference(self):
         """
         Extracts the coordinates of the occupied cells within the shape.
@@ -93,9 +116,7 @@ class Shape:
             coordinates.append((y, x))
 
         return coordinates
-    
 
-    # TODO: use the new coordinates
     def get_true_coordinates(self, old_coordinates, new_coordinates):
         old_y, old_x = old_coordinates
         new_y, new_x = new_coordinates
@@ -159,24 +180,10 @@ class Shape:
         next_coordinates = self.get_next_coordinates(1, 0)
         self.commit_next_move(next_coordinates)
     
-    def commit_rotated_shape(self):
-        self.blocks = self.rotate()
+    def rotate_move(self):
+        rotated_shape, new_coordinates = self.get_rotated_shape_and_coordinates()
+        self.blocks = rotated_shape
         self.ref = self.get_reference()
-        next_coordinates = self.get_next_coordinates(0, 0)
-        self.commit_next_move(next_coordinates)
-    
-    def rotate(self):
-        # Obtenemos las dimensiones de la figura
-        rows, cols = self.get_rows_and_cols()
-
-        # Creamos una nueva matriz vacía para la figura rotada
-        rotated_shape = [[0] * rows for _ in range(cols)]
-
-        # Rotamos la figura
-        for i in range(rows):
-            for j in range(cols):
-                rotated_shape[j][rows - 1 - i] = self.blocks[i][j]
-    
-        return rotated_shape
+        self.commit_next_move(new_coordinates)
 
 

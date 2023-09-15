@@ -34,7 +34,7 @@ class Board:
         os.system("cls")
         sys.stdout.write(str_board)
         sys.stdout.flush()
-        time.sleep(.1)
+        time.sleep(.4)
         
         # clean the grid
         for row, col in shape.normalized_coordinates:

@@ -19,11 +19,8 @@ def main():
     is_game_over = False
 
     board = Board(w=COLS, h=ROWS)
-    # shape = Shape(SHAPES[4])
     shape = Shape(get_random_shape())
 
-    # shape.coordinates = [[(10, 3), (10, 4), (10, 5)], [(11, 3), (11, 4), (11, 5)]]
-    # shape.normalized_coordinates = shape.normalize_coordinates(shape.coordinates)
 
     # keyboard logic
     moves = {
@@ -32,7 +29,6 @@ def main():
         "bottom": (1, 0)
     }
 
-    # y, x = moves["right"]
     is_colliding = False
 
     print("press h or l to start the game :D.")
@@ -40,14 +36,13 @@ def main():
     while (not is_game_over):
         event = keyboard.read_event()
 
-
         y, x = moves["bottom"]
-
         is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
 
         if not is_colliding:
             shape.move_bottom()
         else:
+            is_game_over = True
             # TODO:
             # put the current shape 
             # in the tomb and create other
@@ -96,7 +91,7 @@ def main():
             
             board.print_board(shape)
         except:
-            break
+            is_game_over = True
 
 
 

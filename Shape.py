@@ -176,8 +176,8 @@ class Shape:
         next_coordinates = self.get_next_coordinates(0, 1)
         self.commit_next_move(next_coordinates)
 
-    def move_bottom(self):
-        next_coordinates = self.get_next_coordinates(1, 0)
+    def move_bottom(self, y=1, x=0):
+        next_coordinates = self.get_next_coordinates(y, x)
         self.commit_next_move(next_coordinates)
     
     def rotate_move(self):

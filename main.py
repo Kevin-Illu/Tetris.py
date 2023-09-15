@@ -1,4 +1,5 @@
 from random import choice
+import keyboard
 
 from board import Board
 from shape import Shape
@@ -25,22 +26,76 @@ def main():
     # shape.normalized_coordinates = shape.normalize_coordinates(shape.coordinates)
 
     # keyboard logic
-    # moves = {
-    #     "right": (0, 1),
-    #     "left": (0, -1),
-    #     "bottom": (1, 0)
-    # }
-    
-    count = 0
-    while (not is_game_over):
+    moves = {
+        "right": (0, 1),
+        "left": (0, -1),
+        "bottom": (1, 0)
+    }
 
-        if count >= 5:
+    # y, x = moves["right"]
+    is_colliding = False
+
+    print("press h or l to start the game :D.")
+
+    while (not is_game_over):
+        event = keyboard.read_event()
+
+
+        y, x = moves["bottom"]
+
+        is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
+
+        if not is_colliding:
+            shape.move_bottom()
+        else:
+            pass
+            # put in the tomb
+            
+
+        try:
+            if event.name == 'q':
+                break  # Sale del bucle si la tecla "q" está presionada
+            
+            elif event.name == 'j':
+                y, x = moves["bottom"]
+                is_bottom_colliding = shape.check_if_next_move_is_colliding(0, 0, board)
+
+                if not is_bottom_colliding:
+                    shape.move_bottom(0, 0)
+
+            elif event.name == 'h':
+                y, x = moves["left"]
+                is_left_colliding = shape.check_if_next_move_is_colliding(y, x, board)
+
+                if not is_left_colliding:
+                    shape.move_left()
+
+            elif event.name == 'l':
+                y, x = moves["right"]
+                is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
+
+                if not is_colliding:
+                    shape.move_right()
+
+            elif event.name == 'k':
+                y, x = moves["left"]
+                is_left_colliding = shape.check_if_next_move_is_colliding(y, x, board)
+
+                if is_left_colliding:
+                    continue
+
+                y, x = moves["right"]
+                is_right_colliding = shape.check_if_next_move_is_colliding(y, x, board)
+
+                if is_right_colliding:
+                    continue
+
+                shape.rotate_move()
+            
+            board.print_board(shape)
+        except:
             break
 
-        board.print_board(shape)
-        shape.rotate_move()
-
-        count += 1
 
 
 

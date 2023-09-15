@@ -5,10 +5,6 @@ from board import Board
 from shape import Shape
 from tetris_shapes import SHAPES
 
-
-def exit_program():
-    print("exit_game")
-
 def get_random_shape():
     return choice(SHAPES)
 
@@ -31,10 +27,10 @@ def main():
 
     is_colliding = False
 
-    print("press h or l to start the game :D.")
-
     while (not is_game_over):
-        event = keyboard.read_event()
+
+        board.mark_deaths()
+        board.print_board(shape)
 
         y, x = moves["bottom"]
         is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
@@ -42,14 +38,14 @@ def main():
         if not is_colliding:
             shape.move_bottom()
         else:
-            is_game_over = True
-            # TODO:
-            # put the current shape 
-            # in the tomb and create other
-            pass
+            board.tomb.append(shape.normalized_coordinates)
+            del shape
+            shape = Shape(get_random_shape())
             
 
         try:
+            event = keyboard.read_event()
+
             if event.name == 'q':
                 break  # Sale del bucle si la tecla "q" está presionada
             
@@ -59,6 +55,8 @@ def main():
 
                 if not is_bottom_colliding:
                     shape.move_bottom(0, 0)
+                else:
+                    continue
 
             elif event.name == 'h':
                 y, x = moves["left"]
@@ -66,6 +64,8 @@ def main():
 
                 if not is_left_colliding:
                     shape.move_left()
+                else:
+                    continue
 
             elif event.name == 'l':
                 y, x = moves["right"]
@@ -73,6 +73,8 @@ def main():
 
                 if not is_colliding:
                     shape.move_right()
+                else:
+                    continue
 
             elif event.name == 'k':
                 y, x = moves["left"]
@@ -87,11 +89,9 @@ def main():
                 if is_right_colliding:
                     continue
 
-                shape.rotate_move()
-            
-            board.print_board(shape)
+                shape.rotate_move()         
         except:
-            is_game_over = True
+            break
 
 
 

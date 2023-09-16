@@ -31,6 +31,8 @@ def main():
 
         board.mark_deaths()
         board.print_board(shape)
+        # TODO fix this method :c
+        # board.check_lines()
 
         y, x = moves["bottom"]
         is_colliding = shape.check_if_next_move_is_colliding(y, x, board)

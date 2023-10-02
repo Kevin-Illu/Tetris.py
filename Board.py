@@ -3,16 +3,20 @@ import sys
 import time
 
 
+def clear():
+    return os.system('cls' if os.name == 'nt' else 'clear')
+
+
 def print_rules():
     print()
-
 
 
 class Board:
     def __init__(self, w, h) -> None:
         self.width = w
         self.height = h
-        self.grid = [[0 for _ in range(0, self.width)] for _ in range(0, self.height)]
+        self.grid = [[0 for _ in range(0, self.width)]
+                     for _ in range(0, self.height)]
         self.tomb = []
         self.points = 0
 
@@ -29,7 +33,7 @@ class Board:
         for row, col in shape.normalized_coordinates:
             self.grid[row][col] = 1
 
-        str_board = "" 
+        str_board = ""
         for rows in self.grid:
             for col in rows:
                 if (col == 1):
@@ -38,7 +42,7 @@ class Board:
                     str_board += " . "
             str_board += "\n"
 
-        os.system("cls")
+        clear()
         sys.stdout.write(f"""
     TETRIS
 
@@ -55,14 +59,13 @@ class Board:
         sys.stdout.write(str_board)
         sys.stdout.flush()
         time.sleep(.1)
-        
+
         # clean the grid
         for row, col in shape.normalized_coordinates:
             self.grid[row][col] = 0
 
-
     def print_game_over_screen(self):
-        os.system("cls")
+        clear()
         sys.stdout.write(f"""
 
 
@@ -76,7 +79,7 @@ class Board:
     def is_game_over(self):
         if 1 in self.grid[0]:
             return True
-        
+
         return False
 
     # ----- CHECK THE FULL LINES -------------------
@@ -88,14 +91,13 @@ class Board:
             self.update_tomb_coordinates()
             self.points += 10
 
-
     def get_index_of_lines_completed(self):
         """
         devuelbe un array con indices de filas las cuales
         estan completas
         """
         rows_completed = []
-        
+
         for index_row, row in enumerate(self.grid):
             if 0 not in row:
                 rows_completed.append(index_row)
@@ -107,7 +109,7 @@ class Board:
 
     def remove_coordinates_of_shapes(self, rows):
         for row_index in rows:
-            coordinates_to_delete = [(row_index, n) for n in range(self.width)] 
+            coordinates_to_delete = [(row_index, n) for n in range(self.width)]
             for coordinate in coordinates_to_delete:
                 y, x = coordinate
 
@@ -123,7 +125,6 @@ class Board:
             if len(tomb_row) < 1:
                 self.tomb.pop(self.tomb.index(tomb_row))
 
-
     def update_tomb_coordinates(self):
         new_coordinates = []
         for shape in self.tomb:
@@ -135,11 +136,8 @@ class Board:
 
         self.tomb = new_coordinates
 
-
     def get_index_to_delete(self, index_to_find):
         for shape_index, shape in enumerate(self.tomb):
             for row_index, row in enumerate(shape):
                 if row == index_to_find:
                     return (shape_index, row_index)
-
-

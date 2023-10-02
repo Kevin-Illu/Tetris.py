@@ -13,7 +13,7 @@ class Board:
         self.width = w
         self.height = h
         self.grid = [[0 for _ in range(0, self.width)] for _ in range(0, self.height)]
-        self.tomb = [[(19, 6), (19, 7), (19, 8), (19, 9)], [(18, 3), (18, 4), (19, 4), (19, 5)], [(18, 2), (19, 1), (19, 2), (19, 3)], [(17, 0), (18, 0), (18, 1), (19, 0)]]
+        self.tomb = []
         self.points = 0
 
     # UI

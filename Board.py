@@ -141,3 +141,4 @@ class Board:
             for row_index, row in enumerate(shape):
                 if row == index_to_find:
                     return (shape_index, row_index)
+        return None

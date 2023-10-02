@@ -8,6 +8,7 @@ from tetris_shapes import SHAPES
 def get_random_shape():
     return choice(SHAPES)
 
+
 def main():
     # game logic
     ROWS = 20
@@ -20,7 +21,7 @@ def main():
 
     # keyboard logic
     moves = {
-        "right": (0, 1),
+        "right": (0, 1), # coordenadas (y, x)
         "left": (0, -1),
         "bottom": (1, 0)
     }
@@ -30,9 +31,13 @@ def main():
     while (not is_game_over):
 
         board.mark_deaths()
+
+        if board.is_game_over():
+            board.print_game_over_screen()
+            break
+
         board.print_board(shape)
-        # TODO fix this method :c
-        # board.check_lines()
+        board.remove_lines_completed()
 
         y, x = moves["bottom"]
         is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
@@ -43,7 +48,6 @@ def main():
             board.tomb.append(shape.normalized_coordinates)
             del shape
             shape = Shape(get_random_shape())
-            
 
         try:
             event = keyboard.read_event()

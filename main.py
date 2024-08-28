@@ -37,6 +37,11 @@ def main():
             break
 
         board.print_board(shape)
+
+        # check if exist lines completed
+        while (board.exist_lines_completed()):
+            board.remove_lines_completed()
+
         board.remove_lines_completed()
 
         y, x = moves["bottom"]

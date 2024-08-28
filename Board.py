@@ -82,14 +82,17 @@ class Board:
 
         return False
 
-    # ----- CHECK THE FULL LINES -------------------
-    def remove_lines_completed(self):
+
+    def exist_lines_completed(self):
         rows_to_delete = self.get_index_of_lines_completed()
 
-        if (len(rows_to_delete) > 0):
-            self.remove_coordinates_of_shapes(rows_to_delete)
-            self.update_tomb_coordinates()
-            self.points += 10
+        return len(rows_to_delete) > 0
+
+    def remove_lines_completed(self):
+        rows_to_delete = self.get_index_of_lines_completed()
+        self.remove_coordinates_of_shapes(rows_to_delete)
+        self.update_tomb_coordinates()
+        self.points += 10
 
     def get_index_of_lines_completed(self):
         """

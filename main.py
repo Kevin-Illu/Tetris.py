@@ -42,8 +42,6 @@ def main():
         while (board.exist_lines_completed()):
             board.remove_lines_completed()
 
-        board.remove_lines_completed()
-
         y, x = moves["bottom"]
         is_colliding = shape.check_if_next_move_is_colliding(y, x, board)
 
